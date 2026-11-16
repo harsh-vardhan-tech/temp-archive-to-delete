@@ -18,13 +18,19 @@ export const stepOneSchema = z.object({
     .string()
     .min(1, 'Date of birth is required')
     .refine((val) => {
-      const date = new Date(val);
-      if (isNaN(date.getTime())) return false;
+      if (!val) return false;
+      const parts = val.split('-').map(Number);
+      if (parts.length !== 3 || parts.some(isNaN)) return false;
+      const date = new Date(parts[0], parts[1] - 1, parts[2]);
       const today = new Date();
+      today.setHours(0, 0, 0, 0);
       return date < today;
     }, 'Date of birth cannot be today or in the future')
     .refine((val) => {
-      const birthDate = new Date(val);
+      if (!val) return false;
+      const parts = val.split('-').map(Number);
+      if (parts.length !== 3 || parts.some(isNaN)) return false;
+      const birthDate = new Date(parts[0], parts[1] - 1, parts[2]);
       const today = new Date();
       let age = today.getFullYear() - birthDate.getFullYear();
       const m = today.getMonth() - birthDate.getMonth();
@@ -34,7 +40,10 @@ export const stepOneSchema = z.object({
       return age >= 18;
     }, 'Applicant must be at least 18 years of age')
     .refine((val) => {
-      const birthDate = new Date(val);
+      if (!val) return false;
+      const parts = val.split('-').map(Number);
+      if (parts.length !== 3 || parts.some(isNaN)) return false;
+      const birthDate = new Date(parts[0], parts[1] - 1, parts[2]);
       const today = new Date();
       return today.getFullYear() - birthDate.getFullYear() <= 120;
     }, 'Please enter a valid birth year'),
@@ -51,11 +60,7 @@ export const stepTwoSchema = z
     password: z
       .string()
       .min(1, 'Password is required')
-      .min(8, 'Password must be at least 8 characters long')
-      .regex(/[A-Z]/, 'Must include at least one uppercase letter')
-      .regex(/[a-z]/, 'Must include at least one lowercase letter')
-      .regex(/[0-9]/, 'Must include at least one number')
-      .regex(/[^A-Za-z0-9]/, 'Must include at least one special character (!@#$%^&*)'),
+      .min(8, 'Password must be at least 8 characters long'),
     confirmPassword: z.string().min(1, 'Please confirm your password'),
   })
   .refine((data) => data.password === data.confirmPassword, {

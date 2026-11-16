@@ -23,19 +23,27 @@ export default function StepThree({
 }) {
   const [showPasswordMask, setShowPasswordMask] = useState(false);
 
-  // Format the date of birth for clean display
-  const formattedDob = formData.dob
-    ? new Date(formData.dob).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
-    : 'Not provided';
+  // Format the date of birth cleanly without timezone shift issues
+  const formatDobDisplay = (dobString) => {
+    if (!dobString) return 'Not provided';
+    const parts = dobString.split('-').map(Number);
+    if (parts.length !== 3 || parts.some(isNaN)) return dobString;
+    const date = new Date(parts[0], parts[1] - 1, parts[2]);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
 
-  // Calculate age
+  const formattedDob = formatDobDisplay(formData.dob);
+
+  // Calculate age accurately
   const calculateAge = (dobString) => {
     if (!dobString) return null;
-    const birthDate = new Date(dobString);
+    const parts = dobString.split('-').map(Number);
+    if (parts.length !== 3 || parts.some(isNaN)) return null;
+    const birthDate = new Date(parts[0], parts[1] - 1, parts[2]);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, ArrowLeft, ShieldCheck } from 'lucide-react';
 import FormField from './FormField';
 import PasswordStrength from './PasswordStrength';
@@ -8,6 +8,7 @@ export default function StepTwo({
   register,
   errors,
   watch,
+  trigger,
   onNext,
   onBack,
 }) {
@@ -29,6 +30,13 @@ export default function StepTwo({
     });
     return result.success;
   }, [email, password, confirmPassword]);
+
+  // Real-time cross-field validation for confirmPassword when password changes
+  useEffect(() => {
+    if (confirmPassword && trigger) {
+      trigger('confirmPassword');
+    }
+  }, [password, confirmPassword, trigger]);
 
   // Derived match state for visual feedback
   const passwordsMatch = Boolean(

@@ -76,6 +76,7 @@ export default function RegistrationWizard() {
       console.log('====================================================');
       console.log('🚀 FINALIZED REGISTRATION PAYLOAD (Sprint 7 MVP):');
       console.log(JSON.stringify(data, null, 2));
+      console.log('Raw Payload Object:', data);
       console.log('====================================================');
 
       setSubmittedData(data);
@@ -168,6 +169,7 @@ export default function RegistrationWizard() {
               register={register}
               errors={errors}
               watch={watch}
+              trigger={trigger}
               onNext={handleNext}
               onBack={handleBack}
             />
