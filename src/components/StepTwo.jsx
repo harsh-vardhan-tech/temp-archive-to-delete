@@ -12,16 +12,13 @@ export default function StepTwo({
   onNext,
   onBack,
 }) {
-  // UX State: Show/Hide Password toggles
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Watch fields in real-time
   const email = watch('email') || '';
   const password = watch('password') || '';
   const confirmPassword = watch('confirmPassword') || '';
 
-  // Synchronous real-time validation for conditional button disabling
   const isStepValid = useMemo(() => {
     const result = stepTwoSchema.safeParse({
       email,
@@ -31,14 +28,12 @@ export default function StepTwo({
     return result.success;
   }, [email, password, confirmPassword]);
 
-  // Real-time cross-field validation for confirmPassword when password changes
   useEffect(() => {
     if (confirmPassword && trigger) {
       trigger('confirmPassword');
     }
   }, [password, confirmPassword, trigger]);
 
-  // Derived match state for visual feedback
   const passwordsMatch = Boolean(
     password &&
     confirmPassword &&
@@ -48,28 +43,25 @@ export default function StepTwo({
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-      {/* View Header */}
       <div className="text-left border-b border-slate-800/80 pb-4">
         <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-semibold mb-2">
           <ShieldCheck className="h-3.5 w-3.5" />
-          <span>Step 2: Security & Credentials</span>
+          <span>Step 2: Account Details</span>
         </div>
         <h2 className="text-2xl font-bold tracking-tight text-white">
           Account Details
         </h2>
         <p className="mt-1 text-sm text-slate-400">
-          Establish your enterprise authentication credentials with rigorous security standards.
+          Enter your email and create a password.
         </p>
       </div>
 
-      {/* Input Fields */}
       <div className="space-y-4">
-        {/* Email Field with real-time error check */}
         <FormField
           id="email"
           name="email"
           type="email"
-          label="Corporate Email Address"
+          label="Email Address"
           placeholder="name@company.com"
           icon={Mail}
           register={register}
@@ -78,14 +70,13 @@ export default function StepTwo({
           helperText="Requires '@' and valid domain"
         />
 
-        {/* Primary Password with Show/Hide toggle */}
         <div className="space-y-2">
           <FormField
             id="password"
             name="password"
             type={showPassword ? 'text' : 'password'}
-            label="Master Password"
-            placeholder="Enter minimum 8 characters"
+            label="Password"
+            placeholder="Min. 8 characters"
             icon={Lock}
             register={register}
             error={errors.password}
@@ -97,7 +88,6 @@ export default function StepTwo({
                 onClick={() => setShowPassword((prev) => !prev)}
                 className="text-slate-400 hover:text-slate-200 focus:outline-hidden p-1 transition-colors cursor-pointer"
                 title={showPassword ? 'Hide password' : 'Show password'}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? (
                   <EyeOff className="h-5 w-5" />
@@ -108,29 +98,26 @@ export default function StepTwo({
             }
           />
 
-          {/* Real-time Password Strength and Criteria breakdown */}
           <PasswordStrength password={password} />
         </div>
 
-        {/* Confirm Password with Show/Hide toggle */}
         <FormField
           id="confirmPassword"
           name="confirmPassword"
           type={showConfirmPassword ? 'text' : 'password'}
-          label="Confirm Master Password"
-          placeholder="Re-enter master password"
+          label="Confirm Password"
+          placeholder="Re-enter password"
           icon={Lock}
           register={register}
           error={errors.confirmPassword}
           isValid={passwordsMatch}
-          helperText="Must match master password"
+          helperText="Must match password"
           rightElement={
             <button
               type="button"
               onClick={() => setShowConfirmPassword((prev) => !prev)}
               className="text-slate-400 hover:text-slate-200 focus:outline-hidden p-1 transition-colors cursor-pointer"
               title={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
-              aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
             >
               {showConfirmPassword ? (
                 <EyeOff className="h-5 w-5" />
@@ -142,7 +129,6 @@ export default function StepTwo({
         />
       </div>
 
-      {/* Navigation Triggers */}
       <div className="flex items-center justify-between pt-4 border-t border-slate-800/80">
         <button
           type="button"
@@ -150,7 +136,7 @@ export default function StepTwo({
           className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/60 px-5 py-3 text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition-all cursor-pointer active:scale-98"
         >
           <ArrowLeft className="h-4 w-4" />
-          <span>Back to Personal</span>
+          <span>Back</span>
         </button>
 
         <button

@@ -8,14 +8,11 @@ export default function StepOne({
   errors,
   watch,
   onNext,
-  isFirstStep = true,
 }) {
-  // Watch values for real-time validation and conditional button disabling
   const firstName = watch('firstName') || '';
   const lastName = watch('lastName') || '';
   const dob = watch('dob') || '';
 
-  // Synchronously validate fields against Step 1 Zod schema in real time
   const isStepValid = useMemo(() => {
     const result = stepOneSchema.safeParse({ firstName, lastName, dob });
     return result.success;
@@ -23,21 +20,19 @@ export default function StepOne({
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-      {/* View Header */}
       <div className="text-left border-b border-slate-800/80 pb-4">
         <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-semibold mb-2">
           <Sparkles className="h-3.5 w-3.5" />
-          <span>Step 1: Identity Verification</span>
+          <span>Step 1: Personal Info</span>
         </div>
         <h2 className="text-2xl font-bold tracking-tight text-white">
           Personal Information
         </h2>
         <p className="mt-1 text-sm text-slate-400">
-          Enter your legal personal details as they appear on your government-issued identification.
+          Enter your name and date of birth.
         </p>
       </div>
 
-      {/* Input Fields Grid */}
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField
@@ -78,15 +73,6 @@ export default function StepOne({
         />
       </div>
 
-      {/* Helpful Info Box */}
-      <div className="rounded-xl border border-indigo-900/30 bg-indigo-950/20 p-3.5 text-left text-xs text-indigo-300 flex items-start gap-2.5">
-        <div className="h-1.5 w-1.5 rounded-full bg-indigo-400 mt-1.5 shrink-0" />
-        <p>
-          <span className="font-semibold text-indigo-200">State Persistence Active:</span> Form state is held in the master parent architecture. Navigating between views preserves all captured data without payload loss.
-        </p>
-      </div>
-
-      {/* Navigation Triggers */}
       <div className="flex items-center justify-end pt-4 border-t border-slate-800/80">
         <button
           type="button"
